@@ -1,11 +1,11 @@
 import type { Metadata } from "next";
-import { Inter as FontSans } from "next/font/google";
+import { Red_Hat_Text } from "next/font/google";
 import "./globals.css";
 import { cn } from "@/lib/utils";
 
-const fontSans = FontSans({
+const red_hat = Red_Hat_Text({
   subsets: ["latin"],
-  variable: "--font-sans",
+  variable: "--font-red-hat",
 });
 
 export const metadata: Metadata = {
@@ -29,8 +29,8 @@ export default function RootLayout({
       </head>
       <body
         className={cn(
-          "min-h-screen bg-background font-sans antialiased",
-          fontSans.variable
+          "min-h-screen bg-background font-red-hat antialiased",
+          red_hat.variable
         )}
       >
         {children}
