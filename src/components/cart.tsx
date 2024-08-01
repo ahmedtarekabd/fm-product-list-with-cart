@@ -1,7 +1,6 @@
 "use client";
 import { CartContext } from "@/providers/cart";
 import React, { useContext } from "react";
-import { Button } from "./ui/button";
 import { formatPrice } from "@/lib/utils";
 import { Card, CardContent, CardFooter, CardHeader } from "./ui/card";
 import emptyCart from "../../public/assets/images/illustration-empty-cart.svg";
@@ -9,6 +8,7 @@ import carbonNeutral from "../../public/assets/images/icon-carbon-neutral.svg";
 import Image from "next/image";
 import CartProduct from "./cart-product";
 import { Separator } from "./ui/separator";
+import ConfirmOrder from "./confirm-order";
 
 const Cart = () => {
   const { cart, setCart, totalPrice } = useContext(CartContext);
@@ -57,9 +57,7 @@ const Cart = () => {
                 delivery
               </p>
             </div>
-            <Button variant={"destructive"} className="rounded-full p-6">
-              Confirm Order
-            </Button>
+            <ConfirmOrder />
           </CardFooter>
         </>
       )}
