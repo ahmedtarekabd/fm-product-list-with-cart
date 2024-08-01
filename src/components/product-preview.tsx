@@ -4,15 +4,48 @@ import { ProductPreviewType } from "@/types/types";
 import { Button } from "./ui/button";
 import { MinusCircle, PlusCircle, ShoppingCart } from "lucide-react";
 import { formatPrice } from "@/lib/utils";
-import { useState } from "react";
+import { useContext, useState } from "react";
+import { CartContext } from "@/providers/cart";
 
 const ProductPreview = ({
   image,
   name,
   category,
   price,
+  quantity,
 }: ProductPreviewType) => {
-  const [quantity, setQuantity] = useState(0);
+  const { cart, setCart } = useContext(CartContext);
+  const addProduct = () => {
+    const product = cart.find((p) => p.name === name);
+    if (product) {
+      const newCart = cart.map((p) => {
+        if (p.name === name) {
+          return { ...p, quantity: p.quantity + 1 };
+        }
+        return p;
+      });
+      setCart(newCart);
+    } else {
+      setCart([...cart, { image, name, price, category, quantity: 1 }]);
+    }
+  };
+
+  const removeProduct = () => {
+    const product = cart.find((p) => p.name === name);
+    if (product && product.quantity > 1) {
+      const newCart = cart.map((p) => {
+        if (p.name === name) {
+          return { ...p, quantity: p.quantity - 1 };
+        }
+        return p;
+      });
+      setCart(newCart);
+    } else {
+      const newCart = cart.filter((p) => p.name !== name);
+      setCart(newCart);
+    }
+  };
+
   return (
     <div className="-space-y-2">
       <div className="flex flex-col items-center">
@@ -48,14 +81,14 @@ const ProductPreview = ({
         />
         {quantity ? (
           <>
-            <div className="bg-destructive flex items-center justify-center border-[0.5px] rounded-full -translate-y-1/2 gap-2 overflow-hidden">
+            <div className="bg-destructive text-white flex items-center justify-center border-[0.5px] rounded-full -translate-y-1/2 gap-4 overflow-hidden">
               <Button
                 size={"icon"}
                 className="bg-inherit rounded-full group/button hover:bg-transparent"
-                onClick={() => setQuantity((prev) => prev - 1)}
+                onClick={removeProduct}
               >
                 <MinusCircle
-                  className="group-hover/button:fill-primary group-hover/button:text-destructive"
+                  className="group-hover/button:fill-primary group-hover/button:text-destructive text-primary"
                   size={16}
                 />
               </Button>
@@ -63,10 +96,10 @@ const ProductPreview = ({
               <Button
                 size={"icon"}
                 className="bg-inherit rounded-full group/button hover:bg-transparent"
-                onClick={() => setQuantity((prev) => prev + 1)}
+                onClick={addProduct}
               >
                 <PlusCircle
-                  className="group-hover/button:fill-primary group-hover/button:text-destructive"
+                  className="group-hover/button:fill-primary group-hover/button:text-destructive text-primary"
                   size={16}
                 />
               </Button>
@@ -76,7 +109,7 @@ const ProductPreview = ({
           <>
             <Button
               className="border-[0.5px] rounded-full -translate-y-1/2 p-4 flex items-center gap-2"
-              onClick={() => setQuantity((prev) => prev + 1)}
+              onClick={addProduct}
             >
               <ShoppingCart className="text-destructive" size={24} />
               Add to cart

@@ -1,26 +1,69 @@
 "use client";
-import React, { useEffect } from "react";
+import { CartContext } from "@/providers/cart";
+import React, { useContext } from "react";
+import { Button } from "./ui/button";
+import { formatPrice } from "@/lib/utils";
+import { Card, CardContent, CardFooter, CardHeader } from "./ui/card";
+import emptyCart from "../../public/assets/images/illustration-empty-cart.svg";
+import carbonNeutral from "../../public/assets/images/icon-carbon-neutral.svg";
+import Image from "next/image";
+import CartProduct from "./cart-product";
+import { Separator } from "./ui/separator";
 
 const Cart = () => {
-  // useEffect(() => {
-  //   // Set an item in session storage
-  //   sessionStorage.setItem("cart", "Your cart data");
-
-  //   // Get an item from session storage
-  //   const cartData = sessionStorage.getItem("cart");
-  //   console.log(cartData); // Output: Your cart data
-
-  //   // Remove an item from session storage
-  //   // sessionStorage.removeItem('cart');
-
-  //   // Clear all items in session storage
-  //   // sessionStorage.clear();
-  // }, []);
-
+  const { cart, setCart, totalPrice } = useContext(CartContext);
   return (
-    <div className="lg:col-span-4 bg-white rounded-md my-8 p-4 min-h-48 w-full">
-      <h3 className="text-2xl font-bold">Cart</h3>
-    </div>
+    <Card className="lg:col-span-4 bg-white rounded-md my-8 h-min w-full">
+      <CardHeader>
+        <h3 className="text-2xl font-bold text-destructive">
+          Your Cart ({cart.length})
+        </h3>
+      </CardHeader>
+      {cart.length == 0 ? (
+        <>
+          <CardContent className="flex my-6 flex-col items-center">
+            <Image src={emptyCart} alt="Empty Cart" width={100} height={100} />
+            <p className="text-rose-800 font-semibold">
+              Your added items will appear hear
+            </p>
+          </CardContent>
+        </>
+      ) : (
+        <>
+          <CardContent className="space-y-3">
+            {cart.map((product, i) => (
+              <>
+                <CartProduct key={i} product={product} />
+                <Separator className="h-[0.5px] bg-rose-950/20" />
+              </>
+            ))}
+          </CardContent>
+          <CardFooter className="flex-col justify-normal items-stretch gap-4">
+            <div className="flex justify-between items-center">
+              <span className="text-sm font-medium">Order Total </span>
+              <span className="text-2xl font-bold text-rose-950">
+                {formatPrice(totalPrice)}
+              </span>
+            </div>
+            <div className="flex items-center justify-center gap-2 p-3 bg-rose-50 rounded-md">
+              <Image
+                src={carbonNeutral}
+                alt="Carbon Neutral"
+                width={20}
+                height={20}
+              />
+              <p>
+                This is a <span className="font-medium">carbon-neutral</span>{" "}
+                delivery
+              </p>
+            </div>
+            <Button variant={"destructive"} className="rounded-full p-6">
+              Confirm Order
+            </Button>
+          </CardFooter>
+        </>
+      )}
+    </Card>
   );
 };
 

@@ -8,4 +8,5 @@ export type ProductPreviewType = {
   name: string;
   category: String;
   price: number;
+  quantity: number;
 };
